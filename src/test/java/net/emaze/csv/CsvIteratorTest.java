@@ -1,5 +1,7 @@
 package net.emaze.csv;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -47,8 +49,14 @@ public class CsvIteratorTest {
     }
 
     @Test(expected = NoSuchElementException.class)
-    public void throwsNoSuchElement() {
+    public void throwsNoSuchElementWhenHasNoNextElement() {
         final CsvIterator iterator = new CsvIterator(new StringReader("\n"));
         iterator.next();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void removeIsNotSupported() {
+        final CsvIterator iterator = new CsvIterator(new StringReader("\n"));
+        iterator.remove();
     }
 }

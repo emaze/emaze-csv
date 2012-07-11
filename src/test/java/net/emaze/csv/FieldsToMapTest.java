@@ -9,6 +9,17 @@ import org.junit.Test;
 
 public class FieldsToMapTest {
 
+    @Test(expected = IllegalArgumentException.class)
+    public void columnsMustBeNonNull() {
+        final FieldsToMap fieldsToMap = new FieldsToMap(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void valuesMustBeNonNull() {
+        final FieldsToMap fieldsToMap = new FieldsToMap(Arrays.asList("name"));
+        fieldsToMap.perform(null);
+    }
+
     @Test
     public void yieldsColumnsAndDataPairwise() {
         final List<String> values = Arrays.asList("mario", "30");
