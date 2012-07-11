@@ -21,7 +21,8 @@ public class CsvIterator implements Iterator<List<String>> {
         if (box.isEmpty()) {
             try {
                 final List<String> record = csvParser.record();
-                if (!record.isEmpty()) {
+                final boolean hasMoreRecords = !record.isEmpty();
+                if (hasMoreRecords) {
                     box.setContent(record);
                 }
             } catch (ParseException ex) {
@@ -35,7 +36,7 @@ public class CsvIterator implements Iterator<List<String>> {
         prefetch();
         return box.hasContent();
     }
-    
+
     @Override
     public List<String> next() {
         if (!hasNext()) {
