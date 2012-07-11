@@ -40,6 +40,14 @@ public class CsvIteratorTest {
     }
 
     @Test
+    public void hasNextIsIdempotent() {
+        final CsvIterator iterator = new CsvIterator(new StringReader("a\nb"));
+        iterator.hasNext();
+        iterator.hasNext();
+        Assert.assertEquals(Arrays.asList("a"), iterator.next());
+    }
+
+    @Test
     public void skipEmptyLines() {
         final CsvIterator iterator = new CsvIterator(new StringReader("a\n\nb"));
         iterator.next();
@@ -56,5 +64,11 @@ public class CsvIteratorTest {
     public void removeIsNotSupported() {
         final CsvIterator iterator = new CsvIterator(new StringReader("\n"));
         iterator.remove();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void throwsOnParseError() {
+        final CsvIterator iterator = new CsvIterator(new StringReader(",,\n"));
+        iterator.next();
     }
 }
