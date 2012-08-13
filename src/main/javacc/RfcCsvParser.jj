@@ -1,0 +1,62 @@
+
+options {
+    STATIC = false;
+    UNICODE_INPUT = true;
+}
+
+PARSER_BEGIN(RfcCsvParser)
+package net.emaze.csv;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.io.Reader;
+ 
+public class RfcCsvParser implements CsvParser {
+    
+}
+
+PARSER_END(RfcCsvParser)
+
+<DEFAULT> TOKEN: { 
+      < COMMA: "," > 
+    | < NL: (["\n", "\r"])+ >
+    | < START_QUOTE: "\"" > : IN_QUOTE
+    | < TEXTDATA: (~[",","\r","\n","\""])* >
+}
+
+<IN_QUOTE> TOKEN:
+{
+      <QUOTED_QUOTE: "\"\"">
+    | <END_QUOTE: "\""  > : DEFAULT
+    | <QUOTED_TEXTDATA: (~["\""])* >
+}
+
+
+List<String> record():
+{
+    List<String> out = new ArrayList<String>();
+    String current;
+}
+{
+    (
+        (current=field(){ out.add(current); }) 
+        (<COMMA> current=field(){ out.add(current); })*
+    )?
+    (<NL> | <EOF>)
+    {return out;}
+}
+
+
+String field():
+{
+    StringBuilder sb = new StringBuilder();
+    Token current;
+}
+{
+    (
+        (<START_QUOTE> (current=<QUOTED_QUOTE>{sb.append("\""); }|current=<QUOTED_TEXTDATA>{sb.append(current.image); })*<END_QUOTE>)
+        | (current=<TEXTDATA>{sb.append(current.image); })
+    )
+    { return sb.toString(); }
+}

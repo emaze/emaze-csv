@@ -1,6 +1,5 @@
 package net.emaze.csv;
 
-import java.io.Reader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -12,9 +11,9 @@ public class CsvIterator implements Iterator<List<String>> {
     private final Box<List<String>> box = Box.empty();
     private final CsvParser csvParser;
 
-    public CsvIterator(Reader reader) {
-        dbc.precondition(reader != null, "reader must be non-null");
-        this.csvParser = new CsvParser(reader);
+    public CsvIterator(CsvParser csvParser) {
+        dbc.precondition(csvParser != null, "csvParser must be non-null");
+        this.csvParser = csvParser;
     }
 
     private void prefetch() {

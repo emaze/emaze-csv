@@ -4,7 +4,7 @@ options {
     UNICODE_INPUT = true;
 }
 
-PARSER_BEGIN(CsvParser)
+PARSER_BEGIN(MsftCsvParser)
 package net.emaze.csv;
 
 import java.util.List;
@@ -12,17 +12,17 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.io.Reader;
  
-public class CsvParser {
+public class MsftCsvParser implements CsvParser {
     
 }
 
-PARSER_END(CsvParser)
+PARSER_END(MsftCsvParser)
 
 <DEFAULT> TOKEN: { 
-      < COMMA: "," > 
+      < SEMICOLON: ";" > 
     | < NL: (["\n", "\r"])+ >
     | < START_QUOTE: "\"" > : IN_QUOTE
-    | < TEXTDATA: (~[",","\r","\n","\""])* >
+    | < TEXTDATA: (~[";","\r","\n","\""])* >
 }
 
 <IN_QUOTE> TOKEN:
@@ -41,7 +41,7 @@ List<String> record():
 {
     (
         (current=field(){ out.add(current); }) 
-        (<COMMA> current=field(){ out.add(current); })*
+        (<SEMICOLON> current=field(){ out.add(current); })*
     )?
     (<NL> | <EOF>)
     {return out;}
