@@ -1,4 +1,4 @@
-package net.emaze.csv;
+package net.emaze.csv.reader;
 
 import java.io.StringReader;
 import java.util.Arrays;

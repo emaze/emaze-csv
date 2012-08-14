@@ -1,4 +1,4 @@
-package net.emaze.csv;
+package net.emaze.csv.reader;
 
 import java.util.Iterator;
 import java.util.List;
