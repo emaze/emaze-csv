@@ -2,6 +2,7 @@ package net.emaze.csv.reader;
 
 import java.io.StringReader;
 import java.util.Arrays;
+import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -54,5 +55,69 @@ public class MsftCsvParserTest {
         final StringReader stringReader = new StringReader("  mario  ;  luigi  ".replace('\'', '\"'));
         final MsftCsvParser msftCsvParser = new MsftCsvParser(stringReader);
         Assert.assertEquals(Arrays.asList("  mario  ", "  luigi  "), msftCsvParser.record());
+    }
+
+    @Test
+    public void twoLines() throws ParseException {
+        final StringReader stringReader = new StringReader(";mario;rossi\n;luigi;verdi".replace('\'', '\"'));
+        final MsftCsvParser msftCsvParser = new MsftCsvParser(stringReader);
+        Assert.assertEquals(Arrays.asList("", "mario", "rossi"), msftCsvParser.record());
+        Assert.assertEquals(Arrays.asList("", "luigi", "verdi"), msftCsvParser.record());
+    }
+    
+    @Test
+    public void nonTerminalEmptyRecord() throws ParseException {
+        final StringReader stringReader = new StringReader("\nmario");
+        final MsftCsvParser msftCsvParser = new MsftCsvParser(stringReader);
+        final List<String> record = msftCsvParser.record();
+        Assert.assertEquals(Arrays.asList(""), record);
+    }
+    
+    @Test
+    public void terminalEmptyRecord() throws ParseException {
+        final StringReader stringReader = new StringReader("");
+        final MsftCsvParser msftCsvParser = new MsftCsvParser(stringReader);
+        final List<String> record = msftCsvParser.record();
+        Assert.assertNull(record);
+    }
+
+    @Test
+    public void emptyRecord() throws ParseException {
+        final StringReader stringReader = new StringReader("");
+        final MsftCsvParser msftCsvParser = new MsftCsvParser(stringReader);
+        final List<String> record = msftCsvParser.record();
+        Assert.assertNull(record);
+    }
+
+    @Test
+    public void twoEmptyFields() throws ParseException {
+        final StringReader stringReader = new StringReader(";");
+        final MsftCsvParser msftCsvParser = new MsftCsvParser(stringReader);
+        final List<String> record = msftCsvParser.record();
+        Assert.assertEquals(Arrays.asList("", ""), record);
+    }
+
+    @Test
+    public void threeEmptyFields() throws ParseException {
+        final StringReader stringReader = new StringReader(";;");
+        final MsftCsvParser msftCsvParser = new MsftCsvParser(stringReader);
+        final List<String> record = msftCsvParser.record();
+        Assert.assertEquals(Arrays.asList("", "", ""), record);
+    }
+    
+    @Test
+    public void emptyFieldBeforeNonEmpty() throws ParseException {
+        final StringReader stringReader = new StringReader(";asd");
+        final MsftCsvParser msftCsvParser = new MsftCsvParser(stringReader);
+        final List<String> record = msftCsvParser.record();
+        Assert.assertEquals(Arrays.asList("", "asd"), record);
+    }
+    
+    @Test
+    public void emptyFieldAfterNonEmpty() throws ParseException {
+        final StringReader stringReader = new StringReader("asd;");
+        final MsftCsvParser msftCsvParser = new MsftCsvParser(stringReader);
+        final List<String> record = msftCsvParser.record();
+        Assert.assertEquals(Arrays.asList("asd", ""), record);
     }
 }

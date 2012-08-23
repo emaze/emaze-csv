@@ -19,7 +19,7 @@ public class MsftCsvParser implements CsvParser {
 PARSER_END(MsftCsvParser)
 
 <DEFAULT> TOKEN: { 
-      < SEMICOLON: ";" > 
+      < FIELD_DELIMITER: ";" > 
     | < NL: (["\n", "\r"])+ >
     | < START_QUOTE: "\"" > : IN_QUOTE
     | < TEXTDATA: (~[";","\r","\n","\""])* >
@@ -36,19 +36,20 @@ PARSER_END(MsftCsvParser)
 List<String> record():
 {
     List<String> out = new ArrayList<String>();
-    String current;
+    String current = "";
 }
 {
-    (
-        (current=field(){ out.add(current); }) 
-        (<SEMICOLON> current=field(){ out.add(current); })*
-    )?
-    (<NL> | <EOF>)
-    {return out;}
+      (<EOF> {return null;})
+    | (
+        (current=nonEmptyOrQuotedField())?
+        (
+            (<FIELD_DELIMITER>        { out.add(current); current="";})
+          | ((<NL> | <EOF> )  {out.add(current); return out;})
+        )
+      )*
 }
 
-
-String field():
+String nonEmptyOrQuotedField():
 {
     StringBuilder sb = new StringBuilder();
     Token current;

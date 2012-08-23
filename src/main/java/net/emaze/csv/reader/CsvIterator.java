@@ -20,7 +20,7 @@ public class CsvIterator implements Iterator<List<String>> {
         if (box.isEmpty()) {
             try {
                 final List<String> record = csvParser.record();
-                final boolean hasMoreRecords = !record.isEmpty();
+                final boolean hasMoreRecords = (null != record);
                 if (hasMoreRecords) {
                     box.setContent(record);
                 }

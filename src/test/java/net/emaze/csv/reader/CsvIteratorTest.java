@@ -56,7 +56,7 @@ public class CsvIteratorTest {
 
     @Test(expected = NoSuchElementException.class)
     public void throwsNoSuchElementWhenHasNoNextElement() {
-        final CsvIterator iterator = new CsvIterator(new RfcCsvParser(new StringReader("\n")));
+        final CsvIterator iterator = new CsvIterator(new RfcCsvParser(new StringReader("")));
         iterator.next();
     }
 
@@ -68,7 +68,7 @@ public class CsvIteratorTest {
 
     @Test(expected = IllegalStateException.class)
     public void throwsOnParseError() {
-        final CsvIterator iterator = new CsvIterator(new RfcCsvParser(new StringReader(",,\n")));
+        final CsvIterator iterator = new CsvIterator(new RfcCsvParser(new StringReader("\"")));
         iterator.next();
     }
 }
