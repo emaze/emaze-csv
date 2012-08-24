@@ -4,11 +4,10 @@ import java.util.Iterator;
 import net.emaze.dysfunctional.dispatching.delegates.Delegate;
 import net.emaze.dysfunctional.iterations.ArrayIterator;
 
-public class ArrayAsIterator<T> implements Delegate<Iterator<String>, String[]> {
+public class ArrayAsIterator<T> implements Delegate<Iterator<T>, T[]> {
 
     @Override
-    public Iterator<String> perform(String[] t) {
-        return new ArrayIterator<String>(t);
+    public Iterator<T> perform(T[] t) {
+        return new ArrayIterator<T>(t);
     }
-
 }
