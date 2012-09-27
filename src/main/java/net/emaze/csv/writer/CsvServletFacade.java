@@ -22,8 +22,7 @@ public abstract class CsvServletFacade {
     public static void addHeaders(HttpServletResponse servletResponse, Maybe<String> filename) {
         servletResponse.setContentType("text/csv;charset=UTF-8");
         if (filename.hasValue()) {
-            servletResponse.addHeader("Content-disposition", "attachment;filename=" + filename);
+            servletResponse.addHeader("Content-disposition", "attachment;filename=" + filename.value());
         }
     }
-
 }
