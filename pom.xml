@@ -4,7 +4,7 @@
     <groupId>net.emaze</groupId>
     <artifactId>emaze-csv</artifactId>
     <packaging>jar</packaging>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <name>emaze-csv</name>
     <parent>
         <groupId>net.emaze</groupId>
@@ -35,7 +35,7 @@
     <scm>
         <connection>scm:hg:https://hg.intranet/emaze-csv</connection>
         <developerConnection>scm:hg:file://${basedir}</developerConnection>
-      <tag>HEAD</tag>
+      <tag>1.2</tag>
   </scm>
     <build>
         <plugins>
