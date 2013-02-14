@@ -6,6 +6,7 @@ import net.emaze.arfio.SoftenedWriter;
 import net.emaze.dysfunctional.dispatching.actions.Action;
 
 public class WriteAndFlushOn implements Action<String> {
+
     private final SoftenedWriter writer;
 
     public WriteAndFlushOn(Writer writer) {
@@ -17,5 +18,4 @@ public class WriteAndFlushOn implements Action<String> {
         writer.write(element);
         writer.flush();
     }
-
 }

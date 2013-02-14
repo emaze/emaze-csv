@@ -3,6 +3,7 @@ package net.emaze.csv.writer;
 import net.emaze.dysfunctional.dispatching.delegates.Delegate;
 
 public class AsCsvField<T> implements Delegate<String, T> {
+
     private static final String TEXT_DELIMITER = "\"";
     private static final String ESCAPED_TEXT_DELIMITER = TEXT_DELIMITER + TEXT_DELIMITER;
 
@@ -17,5 +18,4 @@ public class AsCsvField<T> implements Delegate<String, T> {
         }
         return aValue.toString();
     }
-
 }

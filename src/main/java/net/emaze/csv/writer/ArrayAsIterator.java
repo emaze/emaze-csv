@@ -8,6 +8,6 @@ public class ArrayAsIterator<T> implements Delegate<Iterator<T>, T[]> {
 
     @Override
     public Iterator<T> perform(T[] t) {
-        return new ArrayIterator<T>(t);
+        return new ArrayIterator<>(t);
     }
 }

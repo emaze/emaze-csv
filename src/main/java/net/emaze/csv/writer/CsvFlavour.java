@@ -1,11 +1,11 @@
 package net.emaze.csv.writer;
 
 public enum CsvFlavour {
+
     RFC(",", "\"", "\"\""),
     MSFT(";", "\"", "\"\"");
-
     public static final String RECORD_DELIMITER = "\r\n";
-    
+
     private CsvFlavour(String fieldDelimiter, String textDelimiter, String escapedTextDelimiter) {
         this.fieldDelimiter = fieldDelimiter;
         this.textDelimiter = textDelimiter;
@@ -26,5 +26,4 @@ public enum CsvFlavour {
     public String getTextDelimiter() {
         return textDelimiter;
     }
-    
 }

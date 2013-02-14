@@ -24,7 +24,7 @@ public class FieldsToMap implements Delegate<Map<String, String>, List<String>> 
     public Map<String, String> perform(List<String> values) {
         dbc.precondition(values != null, "values must be non-null");
         final int missingValuesCount = Math.max(0, columns.size() - values.size());
-        final Iterator<String> missingValues = Filtering.take(missingValuesCount, new ConstantIterator<String>(""));
+        final Iterator<String> missingValues = Filtering.take(missingValuesCount, new ConstantIterator<>(""));
         final Iterator<String> allValues = Multiplexing.chain(values.iterator(), missingValues);
         return Consumers.dict(Zips.shortest(columns.iterator(), allValues));
     }

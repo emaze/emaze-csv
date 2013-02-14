@@ -1,7 +1,7 @@
 package net.emaze.csv.reader;
 
-import net.emaze.csv.writer.CsvFlavour;
 import java.io.Reader;
+import net.emaze.csv.writer.CsvFlavour;
 
 public class CsvParserFactory {
 
