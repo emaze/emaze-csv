@@ -2,21 +2,20 @@ package net.emaze.csv.writer;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import net.emaze.dysfunctional.Applications;
 import net.emaze.dysfunctional.Iterations;
-import net.emaze.dysfunctional.Strings;
+import net.emaze.dysfunctional.dispatching.delegates.Delegate;
 import net.emaze.dysfunctional.dispatching.delegates.Provider;
 import net.emaze.dysfunctional.iterations.ReadOnlyIterator;
 
 public class CsvRowsIterator extends ReadOnlyIterator<String> {
 
     private final Provider<Iterator<Iterator<String>>> pageProvider;
-    private final CsvFlavour csvFlavour;
+    private final Delegate<String, Iterator<String>> rowRenderer;
     private Iterator<Iterator<String>> prefetchedPage;
 
     public CsvRowsIterator(Iterator<String> headerColumns, Provider<Iterator<Iterator<String>>> pageProvider, CsvFlavour csvFlavour) {
         this.pageProvider = pageProvider;
-        this.csvFlavour = csvFlavour;
+        this.rowRenderer = new AsCsvRow<>(csvFlavour);
         this.prefetchedPage = headerColumns.hasNext() ? Iterations.iterator(headerColumns) : Iterations.<Iterator<String>>iterator();
     }
 
@@ -38,8 +37,7 @@ public class CsvRowsIterator extends ReadOnlyIterator<String> {
         if (!prefetchedPage.hasNext()) {
             throw new NoSuchElementException();
         }
-        Iterator<String> valuesForEntity = prefetchedPage.next();
-        Iterator<String> fieldsInARow = Applications.transform(valuesForEntity, new AsCsvField<String>());
-        return Strings.interpose(fieldsInARow, csvFlavour.getFieldDelimiter());
+        final Iterator<String> valuesForEntity = prefetchedPage.next();
+        return rowRenderer.perform(valuesForEntity);
     }
 }
