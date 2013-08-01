@@ -4,12 +4,26 @@ import net.emaze.dysfunctional.dispatching.delegates.Delegate;
 
 public class AsCsvField<T> implements Delegate<String, T> {
 
-    private static final String TEXT_DELIMITER = "\"";
-    private static final String ESCAPED_TEXT_DELIMITER = TEXT_DELIMITER + TEXT_DELIMITER;
+    private final String textDelimiter;
+    private final String escapedTextDelimiter;
+
+    public AsCsvField(CsvFlavour csvFlavour) {
+        this.textDelimiter = csvFlavour.getTextDelimiter();
+        this.escapedTextDelimiter = csvFlavour.getEscapedTextDelimiter();
+    }
+
+    /**
+     * @deprecated It exists only for backward compatibility reasons
+     */
+    @Deprecated
+    public AsCsvField() {
+        this.textDelimiter = "\"";
+        this.escapedTextDelimiter = "\"\"";
+    }
 
     @Override
     public String perform(T property) {
-        return TEXT_DELIMITER + render(property).replace(TEXT_DELIMITER, ESCAPED_TEXT_DELIMITER) + TEXT_DELIMITER;
+        return textDelimiter + render(property).replace(textDelimiter, escapedTextDelimiter) + textDelimiter;
     }
 
     private String render(Object aValue) {

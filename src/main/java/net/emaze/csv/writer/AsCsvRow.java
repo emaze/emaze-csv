@@ -15,7 +15,7 @@ public class AsCsvRow<T> implements Delegate<String, Iterator<T>> {
 
     @Override
     public String perform(Iterator<T> rowValues) {
-        final Iterator<String> fieldsInARow = Applications.transform(rowValues, new AsCsvField<T>());
+        final Iterator<String> fieldsInARow = Applications.transform(rowValues, new AsCsvField<T>(csvFlavour));
         return Strings.interpose(fieldsInARow, csvFlavour.getFieldDelimiter());
     }
 }
