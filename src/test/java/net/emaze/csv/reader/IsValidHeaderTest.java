@@ -29,10 +29,10 @@ public class IsValidHeaderTest {
     }
 
     @Test
-    public void headerWithAdditionalColumnsIsInvalid() {
+    public void headerWithAdditionalColumnsIsValid() {
         final IsValidHeader predicate = new IsValidHeader(Arrays.asList("A", "B", "C"), 2);
-        final boolean valid = predicate.accept(Arrays.asList("A", "B", "C", "D"));
-        Assert.assertFalse(valid);
+        final boolean valid = predicate.accept(Arrays.asList("A", "B", "C", "D", "E"));
+        Assert.assertTrue(valid);
     }
 
     @Test

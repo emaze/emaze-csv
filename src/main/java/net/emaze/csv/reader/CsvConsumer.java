@@ -24,6 +24,7 @@ public class CsvConsumer {
 
     /**
      * It accepts headers with the columns in the same order of the valid header, having at least the mandatory fields.
+     * Additional columns are considered valid (they will ignored).
      */
     public static class IsValidHeader implements Predicate<List<String>> {
 
@@ -37,8 +38,8 @@ public class CsvConsumer {
 
         @Override
         public boolean accept(List<String> header) {
-            final List<String> normalizedHeader = normalize(header);
-            final int expectedHeaderSize = Math.max(mandatoryFieldsCount, header.size());
+            final int expectedHeaderSize = Math.max(mandatoryFieldsCount, Math.min(header.size(), validHeader.size()));
+            final List<String> normalizedHeader = Consumers.all(Filtering.take(expectedHeaderSize, normalize(header)));
             final List<String> expectedHeader = Consumers.all(Filtering.take(expectedHeaderSize, validHeader));
             return normalizedHeader.equals(expectedHeader);
         }
