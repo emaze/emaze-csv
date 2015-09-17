@@ -4,7 +4,7 @@
     <groupId>net.emaze</groupId>
     <artifactId>emaze-csv</artifactId>
     <packaging>jar</packaging>
-    <version>8.0</version>
+    <version>8.1-SNAPSHOT</version>
     <name>emaze-csv</name>
     <parent>
         <groupId>net.emaze</groupId>
@@ -45,7 +45,7 @@
     </dependencies>
     <scm>
         <developerConnection>scm:git:file://${basedir}</developerConnection>
-      <tag>8.0</tag>
+      <tag>HEAD</tag>
   </scm>
     <build>
         <plugins>
