@@ -1,28 +1,21 @@
 package net.emaze.csv.writer;
 
-import net.emaze.dysfunctional.dispatching.delegates.Delegate;
+import java.util.function.Function;
+import net.emaze.dysfunctional.contracts.dbc;
 
-public class AsCsvField<T> implements Delegate<String, T> {
+public class AsCsvField<T> implements Function<T, String> {
 
     private final String textDelimiter;
     private final String escapedTextDelimiter;
 
     public AsCsvField(CsvFlavour csvFlavour) {
+        dbc.precondition(csvFlavour != null, "csvFlavour cannot be null");
         this.textDelimiter = csvFlavour.getTextDelimiter();
         this.escapedTextDelimiter = csvFlavour.getEscapedTextDelimiter();
     }
 
-    /**
-     * @deprecated It exists only for backward compatibility reasons
-     */
-    @Deprecated
-    public AsCsvField() {
-        this.textDelimiter = "\"";
-        this.escapedTextDelimiter = "\"\"";
-    }
-
     @Override
-    public String perform(T property) {
+    public String apply(T property) {
         return textDelimiter + render(property).replace(textDelimiter, escapedTextDelimiter) + textDelimiter;
     }
 

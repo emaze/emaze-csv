@@ -1,13 +1,13 @@
 package net.emaze.csv.writer;
 
 import java.util.Iterator;
-import net.emaze.dysfunctional.dispatching.delegates.Delegate;
+import java.util.function.Function;
 import net.emaze.dysfunctional.iterations.ArrayIterator;
 
-public class ArrayAsIterator<T> implements Delegate<Iterator<T>, T[]> {
+public class ArrayAsIterator<T> implements Function<T[], Iterator<T>> {
 
     @Override
-    public Iterator<T> perform(T[] t) {
+    public Iterator<T> apply(T[] t) {
         return new ArrayIterator<>(t);
     }
 }

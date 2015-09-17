@@ -3,18 +3,17 @@ package net.emaze.csv.reader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 import net.emaze.dysfunctional.Applications;
 import net.emaze.dysfunctional.Consumers;
 import net.emaze.dysfunctional.Filtering;
-import net.emaze.dysfunctional.dispatching.delegates.Delegate;
-import net.emaze.dysfunctional.dispatching.logic.Predicate;
 
 public class CsvConsumer {
 
     public static void assertValidHeader(Iterator<List<String>> lines, List<String> validHeader, int mandatoryFieldsCount) throws MalformedCsvException {
         try {
             final List<String> header = lines.next();
-            if (!new IsValidHeader(validHeader, mandatoryFieldsCount).accept(header)) {
+            if (!new IsValidHeader(validHeader, mandatoryFieldsCount).test(header)) {
                 throw new MalformedCsvException(String.format("Expected CSV with header %s, given %s", validHeader, header));
             }
         } catch (NoSuchElementException ex) {
@@ -37,7 +36,7 @@ public class CsvConsumer {
         }
 
         @Override
-        public boolean accept(List<String> header) {
+        public boolean test(List<String> header) {
             final int expectedHeaderSize = Math.max(mandatoryFieldsCount, Math.min(header.size(), validHeader.size()));
             final List<String> normalizedHeader = Consumers.all(Filtering.take(expectedHeaderSize, normalize(header)));
             final List<String> expectedHeader = Consumers.all(Filtering.take(expectedHeaderSize, validHeader));
@@ -45,12 +44,7 @@ public class CsvConsumer {
         }
 
         private static List<String> normalize(List<String> values) {
-            return Applications.map(values, new Delegate<String, String>() {
-                @Override
-                public String perform(String value) {
-                    return value.trim().toUpperCase();
-                }
-            });
+            return Applications.map(values, (String value) -> value.trim().toUpperCase());
         }
     }
 }

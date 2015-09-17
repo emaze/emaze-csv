@@ -33,7 +33,7 @@ public class CsvIterator implements Iterator<List<String>> {
     @Override
     public boolean hasNext() {
         prefetch();
-        return box.hasContent();
+        return box.isPresent();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class CsvIterator implements Iterator<List<String>> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        return box.unload().value();
+        return box.unload().get();
     }
 
     @Override
