@@ -3,7 +3,7 @@
     <groupId>net.emaze</groupId>
     <artifactId>emaze-csv</artifactId>
     <packaging>jar</packaging>
-    <version>8.1-SNAPSHOT</version>
+    <version>8.1</version>
     <name>emaze-csv</name>
     <description>Library for csv generation</description>
     <url>https://github.com/emaze/emaze-csv</url>
@@ -139,6 +139,6 @@
     <scm>
         <url>https://github.com/emaze/emaze-csv</url>
         <developerConnection>scm:git:file://${basedir}</developerConnection>
-        <tag>HEAD</tag>
+        <tag>8.1</tag>
     </scm>
 </project>
