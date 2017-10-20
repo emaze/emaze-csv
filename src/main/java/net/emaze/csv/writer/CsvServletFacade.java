@@ -1,23 +1,21 @@
 package net.emaze.csv.writer;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.function.Consumer;
 import javax.servlet.http.HttpServletResponse;
-import net.emaze.arfio.Arfio;
-import net.emaze.arfio.SoftenedIOException;
-import net.emaze.arfio.SoftenedOutputStreamWriter;
 import org.jooq.lambda.Seq;
 
 public abstract class CsvServletFacade {
 
     public static Consumer<String> lineWriter(HttpServletResponse servletResponse) {
         try {
-            final SoftenedOutputStreamWriter writer = Arfio.writer(servletResponse.getOutputStream(), "UTF-8");
+            final OutputStreamWriter writer = new OutputStreamWriter(servletResponse.getOutputStream(), "UTF-8");
             return new WriteAndFlushOn(writer);
         } catch (IOException ex) {
-            throw new SoftenedIOException(ex);
+            throw new RuntimeException(ex);
         }
     }
 

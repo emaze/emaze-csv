@@ -45,11 +45,6 @@
             <version>0.9.12</version>
         </dependency>
         <dependency>
-            <groupId>net.emaze</groupId>
-            <artifactId>emaze-arfio</artifactId>
-            <version>2.1</version>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
