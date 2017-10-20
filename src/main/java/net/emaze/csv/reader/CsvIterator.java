@@ -4,26 +4,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class CsvIterator implements Iterator<List<String>> {
 
-    private final AtomicReference<List<String>> box = new AtomicReference<>();
-    private final CsvParser csvParser;
+    private final CsvParser parser;
+    private List<String> prefetch = null;
 
-    public CsvIterator(CsvParser csvParser) {
-        Objects.requireNonNull(csvParser, "csvParser must be non-null");
-        this.csvParser = csvParser;
+    public CsvIterator(CsvParser parser) {
+        Objects.requireNonNull(parser, "CSV parser cannot be null");
+        this.parser = parser;
     }
 
     private void prefetch() {
-        if (box.get() == null) {
+        if (prefetch == null) {
             try {
-                final List<String> record = csvParser.record();
-                final boolean hasMoreRecords = (null != record);
-                if (hasMoreRecords) {
-                    box.set(record);
-                }
+                prefetch = parser.record();
             } catch (ParseException ex) {
                 throw new IllegalStateException(ex);
             }
@@ -33,19 +28,15 @@ public class CsvIterator implements Iterator<List<String>> {
     @Override
     public boolean hasNext() {
         prefetch();
-        return box.get() != null;
+        return prefetch != null;
     }
 
     @Override
     public List<String> next() {
-        if (!hasNext()) {
-            throw new NoSuchElementException();
-        }
-        return box.getAndSet(null);
-    }
-
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException("Not supported.");
+        prefetch();
+        if (prefetch == null) throw new NoSuchElementException();
+        final List<String> next = prefetch;
+        prefetch = null;
+        return next;
     }
 }
