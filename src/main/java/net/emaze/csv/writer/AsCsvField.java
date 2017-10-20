@@ -1,7 +1,8 @@
 package net.emaze.csv.writer;
 
-import java.util.function.Function;
 import net.emaze.dysfunctional.contracts.dbc;
+
+import java.util.function.Function;
 
 public class AsCsvField<T> implements Function<T, String> {
 
@@ -16,13 +17,13 @@ public class AsCsvField<T> implements Function<T, String> {
 
     @Override
     public String apply(T property) {
+        if (property == null) {
+            return "";
+        }
         return textDelimiter + render(property).replace(textDelimiter, escapedTextDelimiter) + textDelimiter;
     }
 
-    private String render(Object aValue) {
-        if (aValue == null) {
-            return "";
-        }
-        return aValue.toString();
+    private String render(Object property) {
+        return property.toString().replaceAll("\\r\\n|\\r|\\n", "\r\n");
     }
 }
