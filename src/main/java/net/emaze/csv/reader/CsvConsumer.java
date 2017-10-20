@@ -4,9 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.function.Predicate;
-import net.emaze.dysfunctional.Applications;
-import net.emaze.dysfunctional.Consumers;
-import net.emaze.dysfunctional.Filtering;
+import org.jooq.lambda.Seq;
 
 public class CsvConsumer {
 
@@ -31,20 +29,20 @@ public class CsvConsumer {
         private final int mandatoryFieldsCount;
 
         public IsValidHeader(List<String> validHeader, int mandatoryFieldsCount) {
-            this.validHeader = normalize(validHeader);
+            this.validHeader = Seq.seq(validHeader).map(this::normalize).toList();
             this.mandatoryFieldsCount = mandatoryFieldsCount;
         }
 
         @Override
         public boolean test(List<String> header) {
             final int expectedHeaderSize = Math.max(mandatoryFieldsCount, Math.min(header.size(), validHeader.size()));
-            final List<String> normalizedHeader = Consumers.all(Filtering.take(expectedHeaderSize, normalize(header)));
-            final List<String> expectedHeader = Consumers.all(Filtering.take(expectedHeaderSize, validHeader));
+            final List<String> normalizedHeader = Seq.seq(header).map(this::normalize).take(expectedHeaderSize).toList();
+            final List<String> expectedHeader = Seq.seq(validHeader).take(expectedHeaderSize).toList();
             return normalizedHeader.equals(expectedHeader);
         }
 
-        private static List<String> normalize(List<String> values) {
-            return Applications.map(values, (String value) -> value.trim().toUpperCase());
+        private String normalize(String value) {
+            return value.trim().toUpperCase();
         }
     }
 }

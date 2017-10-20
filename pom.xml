@@ -3,7 +3,7 @@
     <groupId>net.emaze</groupId>
     <artifactId>emaze-csv</artifactId>
     <packaging>jar</packaging>
-    <version>8.2-SNAPSHOT</version>
+    <version>9.0-SNAPSHOT</version>
     <name>emaze-csv</name>
     <description>Library for csv generation</description>
     <url>https://github.com/emaze/emaze-csv</url>
@@ -40,9 +40,9 @@
     </dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>net.emaze</groupId>
-            <artifactId>emaze-dysfunctional</artifactId>
-            <version>8.1.0</version>
+            <groupId>org.jooq</groupId>
+            <artifactId>jool</artifactId>
+            <version>0.9.12</version>
         </dependency>
         <dependency>
             <groupId>net.emaze</groupId>

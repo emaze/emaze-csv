@@ -3,26 +3,26 @@ package net.emaze.csv.reader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import net.emaze.dysfunctional.contracts.dbc;
-import net.emaze.dysfunctional.options.Box;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CsvIterator implements Iterator<List<String>> {
 
-    private final Box<List<String>> box = Box.empty();
+    private final AtomicReference<List<String>> box = new AtomicReference<>();
     private final CsvParser csvParser;
 
     public CsvIterator(CsvParser csvParser) {
-        dbc.precondition(csvParser != null, "csvParser must be non-null");
+        Objects.requireNonNull(csvParser, "csvParser must be non-null");
         this.csvParser = csvParser;
     }
 
     private void prefetch() {
-        if (box.isEmpty()) {
+        if (box.get() == null) {
             try {
                 final List<String> record = csvParser.record();
                 final boolean hasMoreRecords = (null != record);
                 if (hasMoreRecords) {
-                    box.setContent(record);
+                    box.set(record);
                 }
             } catch (ParseException ex) {
                 throw new IllegalStateException(ex);
@@ -33,7 +33,7 @@ public class CsvIterator implements Iterator<List<String>> {
     @Override
     public boolean hasNext() {
         prefetch();
-        return box.isPresent();
+        return box.get() != null;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class CsvIterator implements Iterator<List<String>> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        return box.unload().get();
+        return box.getAndSet(null);
     }
 
     @Override

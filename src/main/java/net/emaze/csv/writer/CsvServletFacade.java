@@ -2,15 +2,13 @@ package net.emaze.csv.writer;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.function.Consumer;
 import javax.servlet.http.HttpServletResponse;
 import net.emaze.arfio.Arfio;
 import net.emaze.arfio.SoftenedIOException;
 import net.emaze.arfio.SoftenedOutputStreamWriter;
-import net.emaze.dysfunctional.Applications;
-import net.emaze.dysfunctional.iterations.ConstantIterator;
-import net.emaze.dysfunctional.multiplexing.InterposingIterator;
-import net.emaze.dysfunctional.options.Maybe;
+import org.jooq.lambda.Seq;
 
 public abstract class CsvServletFacade {
 
@@ -24,15 +22,12 @@ public abstract class CsvServletFacade {
     }
 
     public static void stream(Iterator<String> rows, HttpServletResponse response) {
-        final Iterator<String> separatedLines = new InterposingIterator<>(rows, new ConstantIterator<>(CsvFlavour.RECORD_DELIMITER));
         final Consumer<String> writer = CsvServletFacade.lineWriter(response);
-        Applications.each(separatedLines, writer);
+        Seq.seq(rows).intersperse(CsvFlavour.RECORD_DELIMITER).forEach(writer);
     }
 
-    public static void addHeaders(HttpServletResponse servletResponse, Maybe<String> filename) {
+    public static void addHeaders(HttpServletResponse servletResponse, Optional<String> filename) {
         servletResponse.setContentType("text/csv;charset=UTF-8");
-        if (filename.isPresent()) {
-            servletResponse.addHeader("Content-disposition", "attachment;filename=" + filename.get());
-        }
+        filename.ifPresent(it -> servletResponse.addHeader("Content-disposition", "attachment;filename=" + it));
     }
 }

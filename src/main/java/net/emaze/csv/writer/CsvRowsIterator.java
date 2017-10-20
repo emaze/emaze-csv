@@ -4,10 +4,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import net.emaze.dysfunctional.Iterations;
-import net.emaze.dysfunctional.iterations.ReadOnlyIterator;
+import org.jooq.lambda.Seq;
 
-public class CsvRowsIterator extends ReadOnlyIterator<String> {
+public class CsvRowsIterator implements Iterator<String> {
 
     private final Supplier<Iterator<Iterator<String>>> pageProvider;
     private final Function<Iterator<String>, String> rowRenderer;
@@ -16,7 +15,9 @@ public class CsvRowsIterator extends ReadOnlyIterator<String> {
     public CsvRowsIterator(Iterator<String> headerColumns, Supplier<Iterator<Iterator<String>>> pageProvider, CsvFlavour csvFlavour) {
         this.pageProvider = pageProvider;
         this.rowRenderer = new AsCsvRow<>(csvFlavour);
-        this.prefetchedPage = headerColumns.hasNext() ? Iterations.iterator(headerColumns) : Iterations.<Iterator<String>>iterator();
+        this.prefetchedPage = headerColumns.hasNext()
+                ? Seq.of(headerColumns).iterator()
+                : Seq.<Iterator<String>>empty().iterator();
     }
 
     @Override

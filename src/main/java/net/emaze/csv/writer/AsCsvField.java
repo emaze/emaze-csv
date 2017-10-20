@@ -1,7 +1,6 @@
 package net.emaze.csv.writer;
 
-import net.emaze.dysfunctional.contracts.dbc;
-
+import java.util.Objects;
 import java.util.function.Function;
 
 public class AsCsvField<T> implements Function<T, String> {
@@ -10,7 +9,7 @@ public class AsCsvField<T> implements Function<T, String> {
     private final String escapedTextDelimiter;
 
     public AsCsvField(CsvFlavour csvFlavour) {
-        dbc.precondition(csvFlavour != null, "csvFlavour cannot be null");
+        Objects.requireNonNull(csvFlavour, "csvFlavour cannot be null");
         this.textDelimiter = csvFlavour.getTextDelimiter();
         this.escapedTextDelimiter = csvFlavour.getEscapedTextDelimiter();
     }

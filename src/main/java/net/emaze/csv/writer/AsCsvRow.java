@@ -1,23 +1,21 @@
 package net.emaze.csv.writer;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.function.Function;
-import net.emaze.dysfunctional.Applications;
-import net.emaze.dysfunctional.Strings;
-import net.emaze.dysfunctional.contracts.dbc;
+import org.jooq.lambda.Seq;
 
 public class AsCsvRow<T> implements Function<Iterator<T>, String> {
 
     private final CsvFlavour csvFlavour;
 
     public AsCsvRow(CsvFlavour csvFlavour) {
-        dbc.precondition(csvFlavour != null, "csvFlavour cannot be null");
+        Objects.requireNonNull(csvFlavour, "csvFlavour cannot be null");
         this.csvFlavour = csvFlavour;
     }
 
     @Override
     public String apply(Iterator<T> rowValues) {
-        final Iterator<String> fieldsInARow = Applications.transform(rowValues, new AsCsvField<T>(csvFlavour));
-        return Strings.interpose(fieldsInARow, csvFlavour.getFieldDelimiter());
+        return Seq.seq(rowValues).map(new AsCsvField<T>(csvFlavour)).toString(csvFlavour.getFieldDelimiter());
     }
 }
